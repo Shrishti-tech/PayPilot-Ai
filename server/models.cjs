@@ -1,0 +1,8 @@
+const { mongoose } = require('./db.cjs')
+
+const userSchema = new mongoose.Schema({ name: { type: String, required: true }, email: { type: String, required: true, unique: true, lowercase: true }, passwordHash: { type: String, required: true }, role: { type: String, enum: ['merchant', 'admin'], default: 'merchant' } }, { timestamps: true })
+const customerSchema = new mongoose.Schema({ externalId: { type: String, unique: true }, name: String, email: String, phone: String, cartValue: Number, totalOrders: Number, totalSpent: Number, productViews: Number, lastActive: String, paymentStatus: String, opportunity: String, product: String, intentScore: Number }, { timestamps: true })
+const orderSchema = new mongoose.Schema({ externalId: String, customerId: String, customer: String, item: String, amount: Number, status: String, source: String, razorpayOrderId: String, razorpayPaymentId: String, date: String }, { timestamps: true })
+const aiActionSchema = new mongoose.Schema({ externalId: { type: String, unique: true }, customerId: String, customerName: String, type: String, decision: String, reason: String, factors: [String], offer: Number, message: String, status: String, revenueRecovered: { type: Number, default: 0 }, discountCost: { type: Number, default: 0 }, createdAt: Date, approvedAt: Date, rejectedAt: Date }, { timestamps: true })
+
+module.exports = { User: mongoose.models.User || mongoose.model('User', userSchema), Customer: mongoose.models.Customer || mongoose.model('Customer', customerSchema), Order: mongoose.models.Order || mongoose.model('Order', orderSchema), AIAction: mongoose.models.AIAction || mongoose.model('AIAction', aiActionSchema) }
